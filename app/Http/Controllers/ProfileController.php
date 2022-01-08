@@ -13,7 +13,7 @@ class ProfileController extends Controller
 
         if ($request->input('password')) {
             auth()->user()->update([
-                'password' => bcrypt($request->input(password)),
+                'password' => bcrypt($request->input('password')),
             ]);
         }
 
