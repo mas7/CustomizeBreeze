@@ -15,7 +15,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::paginate();
+        $tasks = Task::latest()->paginate();
         return view('tasks.index', compact('tasks'));
     }
 
@@ -26,7 +26,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return view('tasks.create');
     }
 
     /**
@@ -37,7 +37,8 @@ class TaskController extends Controller
      */
     public function store(StoreTaskRequest $request)
     {
-        //
+        Task::create(['name' => $request->name]);
+        return redirect()->route('tasks.index')->with('message', 'Task created successfully');
     }
 
     /**
@@ -59,7 +60,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task)
     {
-        //
+        return view('tasks.edit', compact('task'));
     }
 
     /**
@@ -71,7 +72,8 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task)
     {
-        //
+        $task->update($request->only(['name']));
+        return redirect()->route('tasks.index')->with('message', 'Task updated successfully');
     }
 
     /**
@@ -82,6 +84,9 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        //
+        $deleted = $task->delete();
+        if ($deleted) {
+            return redirect()->route('tasks.index')->with('message', 'Task deleted successfully');
+        }
     }
 }
